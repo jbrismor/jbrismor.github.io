@@ -669,14 +669,35 @@
     "href": "PixelPoets.html",
     "title": "Pixel Poets",
     "section": "",
-    "text": "This project aim to create different GANs to generate specific types of art. It will study the effectiveness of different models and compare results."
+    "text": "This project aims to train three different models to generate images of art. The first model is a Variational Autoencoder (VAE) that learns to encode and decode images, while the second model is a Conditional Deep Convolutional Generative Adversarial Network (DCGAN) that generates images based on specific conditions. The third model is a fine-tuned diffusion model from Google: ddpm-celebahq-256 and can be downloaded here: model."
   },
   {
-    "objectID": "PixelPoets.html#in-progress",
-    "href": "PixelPoets.html#in-progress",
+    "objectID": "PixelPoets.html#project-overview",
+    "href": "PixelPoets.html#project-overview",
     "title": "Pixel Poets",
     "section": "",
-    "text": "This project aim to create different GANs to generate specific types of art. It will study the effectiveness of different models and compare results."
+    "text": "This project aims to train three different models to generate images of art. The first model is a Variational Autoencoder (VAE) that learns to encode and decode images, while the second model is a Conditional Deep Convolutional Generative Adversarial Network (DCGAN) that generates images based on specific conditions. The third model is a fine-tuned diffusion model from Google: ddpm-celebahq-256 and can be downloaded here: model."
+  },
+  {
+    "objectID": "PixelPoets.html#repository",
+    "href": "PixelPoets.html#repository",
+    "title": "Pixel Poets",
+    "section": "Repository",
+    "text": "Repository\nThe repository can be found here: PixelPoets."
+  },
+  {
+    "objectID": "PixelPoets.html#dataset",
+    "href": "PixelPoets.html#dataset",
+    "title": "Pixel Poets",
+    "section": "Dataset",
+    "text": "Dataset\nWikiart dataset containing 81,444 pieces of visual art from various artists, taken from WikiArt.org, along with class labels for each image. The dataset is divided into three main categories:\n\n“artist” : 129 artist classes, including a “Unknown Artist” class\n“genre” : 11 genre classes, including a “Unknown Genre” class\n“style” : 27 style classes\n\nEspecially for a Conditional Deep Convolutional Generative Adversarial Network (DCGAN), the “genre” was used as the condition for generating images.\n\nhttps://huggingface.co/datasets/huggan/wikiart"
+  },
+  {
+    "objectID": "PixelPoets.html#app-results",
+    "href": "PixelPoets.html#app-results",
+    "title": "Pixel Poets",
+    "section": "App & Results",
+    "text": "App & Results\nDue to out compute-power restrictions, the Conditional DC-GAN was trained on rather smaller images and the Diffusion model was finetuned for only some epochs. However, we can see promising results and hopefully this can be improved in the future with more compute.\nThe app looks like the following:\n\n\n\nApp\n\n\nAnd some of the results are the following:\n\n \n\n\n \n\nMore examples can be found in the GitHub repository."
   },
   {
     "objectID": "Luna_Rover.html",
