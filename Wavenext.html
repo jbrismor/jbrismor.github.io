@@ -4910,10 +4910,6 @@ html { background-image: none !important; }
     <a class="dropdown-item" href="./Wavenext.html">
  <span class="dropdown-text">Introduction</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/jbrismor/WaveNeXt">
- <span class="dropdown-text">Repo</span></a>
-  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -5234,7 +5230,9 @@ html { background-image: none !important; }
   <li><a href="#phase-2-modern-architectures" id="toc-phase-2-modern-architectures" class="nav-link" data-scroll-target="#phase-2-modern-architectures">Phase 2: Modern Architectures</a></li>
   <li><a href="#phase-3-ablation-study---window-flatten" id="toc-phase-3-ablation-study---window-flatten" class="nav-link" data-scroll-target="#phase-3-ablation-study---window-flatten">Phase 3: Ablation Study - Window &amp; Flatten</a></li>
   <li><a href="#phase-4-focus-on-the-hard-variables-t_p-dir" id="toc-phase-4-focus-on-the-hard-variables-t_p-dir" class="nav-link" data-scroll-target="#phase-4-focus-on-the-hard-variables-t_p-dir">Phase 4: Focus on the Hard Variables (<span class="math inline">\(T_p\)</span> &amp; <span class="math inline">\(Dir\)</span>)</a></li>
-  <li><a href="#phase-5-generalization-possible-application-as-part-of-this-project-or-maybe-a-later-project" id="toc-phase-5-generalization-possible-application-as-part-of-this-project-or-maybe-a-later-project" class="nav-link" data-scroll-target="#phase-5-generalization-possible-application-as-part-of-this-project-or-maybe-a-later-project">Phase 5: Generalization (possible application as part of this project or maybe a later project)</a></li>
+  <li><a href="#phase-5-the-foundation-model-frontier-zero-shot-adaptation" id="toc-phase-5-the-foundation-model-frontier-zero-shot-adaptation" class="nav-link" data-scroll-target="#phase-5-the-foundation-model-frontier-zero-shot-adaptation">Phase 5: The Foundation Model Frontier (Zero-Shot &amp; Adaptation)</a></li>
+  <li><a href="#phase-6-state-space-efficiency-and-mixing" id="toc-phase-6-state-space-efficiency-and-mixing" class="nav-link" data-scroll-target="#phase-6-state-space-efficiency-and-mixing">Phase 6: State-Space Efficiency and Mixing</a></li>
+  <li><a href="#phase-7-generalization-evaluation-protocol" id="toc-phase-7-generalization-evaluation-protocol" class="nav-link" data-scroll-target="#phase-7-generalization-evaluation-protocol">Phase 7: Generalization &amp; Evaluation Protocol</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -5268,29 +5266,32 @@ html { background-image: none !important; }
 </header>
 
 
-<p><strong>Status:</strong> Work in Progress <a href="https://github.com/jbrismor/WaveNeXt">here</a></p>
+<p><strong>Status:</strong> Work in Progress, the repository is private at the moment but will become available once results are published here:<a href="https://github.com/jbrismor/WaveNeXt">repo</a></p>
 <p><strong>Started:</strong> December 2025</p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>While traditional wave forecasting relies heavily on manual feature engineering, WaveNeXt seeks to answer a broader set of architectural and operational questions:</p>
 <ol type="1">
-<li><strong>Performance:</strong> Can specialized time-series architectures (N-HiTS, PatchTST, iTransformer) outperform the current SOTA baselines in wave height and direction at single port level?</li>
-<li><strong>Inductive Bias vs. Engineering:</strong> Do these models actually need manual <strong>Window &amp; Flatten (WF) or wavelets</strong> preprocessing, or can their internal mechanisms learn these temporal dependencies natively?</li>
-<li><strong>Optimization:</strong> Can domain-specific enhancements, such as <strong>Von Mises circular losses</strong> and <strong>physical consistency constraints</strong>, significantly improve prediction accuracy or training convergence?</li>
-<li><strong>Generalization:</strong> Can a single architectural setup generalize across heterogeneous sea states and geographic regions without site-specific re-tuning?</li>
+<li><strong>Architecture vs. Feature Engineering:</strong> A controlled re-evaluation of manual feature engineering (Window &amp; Flatten) against the native architectural inductive biases of Patch-based Transformers and Hierarchical Stacks.</li>
+<li><strong>The “Foundation” Benchmark:</strong> A systematic comparison of site-specific training versus Zero-Shot/Few-Shot generalization using 2025 state-of-the-art foundation models (<strong>Chronos-2</strong>, <strong>TimesFM-2.5</strong>).</li>
+<li><strong>Circular &amp; Physics-Consistent Optimization:</strong> Implementation and analysis of Von Mises probabilistic losses for Wave Direction (<span class="math inline">\(Dir\)</span>) and physical steepness constraints for high-energy events.</li>
+<li><strong>Computational Pareto Analysis:</strong> Evaluation of the trade-off between predictive accuracy and hardware efficiency, specifically benchmarking <strong>Mamba’s</strong> linear scaling against quadratic Transformer complexity.</li>
+<li><strong>Multi-Region Generalization:</strong> A benchmark across heterogeneous wave regimes (Valencia vs. other basins) to test model robustness without site-specific hyperparameter tuning.</li>
 </ol>
 </section>
 <section id="research-hypotheses" class="level2">
 <h2 class="anchored" data-anchor-id="research-hypotheses">Research Hypotheses</h2>
-<ul>
-<li><strong>Native Learning vs. Manual Flattening:</strong> We hypothesize that <strong>PatchTST</strong>’s native internal patching mechanism will capture both short-term dependencies and long-term trends more effectively than a manually flattened Random Forest.</li>
-<li><strong>The Directional Challenge:</strong> We hypothesize that <strong>N-HiTS</strong>, utilizing harmonic basis expansion and a specialized <strong>Von Mises circular loss</strong>, will naturally model the <span class="math inline">\(0^\circ/360^\circ\)</span> discontinuity that causes standard regression models to fail.</li>
-<li><strong>Robustness to Extreme Events:</strong> We expect modern architectures to exhibit higher robustness to “storm shocks” (extreme events), reducing the error gap observed in baseline models during high-energy sea states.</li>
-</ul>
+<ol type="1">
+<li><strong>Native Learning vs. Manual Flattening:</strong> We hypothesize that <strong>PatchTST</strong>, with its native internal patching mechanism, will capture both the short-term accuracy of the WF-RF and the long-term stability of the LSTM without manual data restructuring.</li>
+<li><strong>The Directional Challenge:</strong> We hypothesize that <strong>N-HiTS</strong>, utilizing harmonic basis expansion combined with a custom <strong>Von Mises Loss</strong>, will naturally model the circular periodicity of direction (<span class="math inline">\(Dir\)</span>), outperforming Euclidean-based regression models that fail at the <span class="math inline">\(0^\circ/360^\circ\)</span> discontinuity.</li>
+<li><strong>Robustness to Extreme Events:</strong> We hypothesize that architectures utilizing multivariate mixing (<strong>TSMixer</strong>, <strong>iTransformer</strong>) will exhibit higher robustness to “storm shocks” (Dataset K2) by explicitly modeling the physical correlation between wind energy and wave response.</li>
+<li><strong>Foundation Knowledge vs. Site-Specific Training:</strong> We hypothesize that pre-trained foundation models (<strong>Chronos-2</strong>, <strong>TimesFM-2.5</strong>), despite never seeing local bathymetry, will exhibit superior generalization during “Black Swan” storm events compared to models trained from scratch, due to their exposure to billions of diverse physical patterns.</li>
+<li><strong>Computational Efficiency vs. Memory Scaling:</strong> We hypothesize that <strong>Mamba</strong>, utilizing linear state-space modeling, will match the predictive accuracy of <strong>PatchTST</strong> while maintaining a significantly lower memory footprint as the context window increases, proving its superiority for deployment on operational buoy systems.</li>
+</ol>
 </section>
 <section id="experimental-design" class="level2">
 <h2 class="anchored" data-anchor-id="experimental-design">🛠️ Experimental Design</h2>
-<p>The study is structured into five progressive phases, moving from baseline replication to advanced generalization across heterogeneous sea states.</p>
+<p>The study is structured into seven progressive phases, moving from baseline replication to the exploration of state-of-the-art foundation models and state-space architectures. This comprehensive design aims to establish a new benchmark for operational wave forecasting.</p>
 <section id="phase-1-replication" class="level3">
 <h3 class="anchored" data-anchor-id="phase-1-replication">Phase 1: Replication</h3>
 <p>We first replicate the results of (<a href="https://www.sciencedirect.com/science/article/pii/S1463500325001416"><em>Portillo Juan et al. (2026)</em></a>) to establish a valid baseline and ensure fair comparison.</p>
@@ -5311,61 +5312,75 @@ html { background-image: none !important; }
 </section>
 <section id="phase-2-modern-architectures" class="level3">
 <h3 class="anchored" data-anchor-id="phase-2-modern-architectures">Phase 2: Modern Architectures</h3>
-<p>We train the new architectures using <strong>standard sequential input</strong>, removing the manual feature engineering step entirely.</p>
+<p>We train modern neural architectures using <strong>standard sequential input</strong>, removing the manual feature engineering step entirely to test the power of native inductive biases.</p>
 <ul>
 <li><strong>Models:</strong> <strong>N-HiTS</strong> (Neural Hierarchical Interpolation for Time Series) and <strong>PatchTST</strong> (Patch Time Series Transformer).</li>
 <li><strong>Input:</strong> Raw time-series window <span class="math inline">\((H_s, W_s, Dir, T_p)_{t-n...t}\)</span> without derived physics variables.</li>
 <li><strong>Hypothesis Test:</strong> If <code>MAE(PatchTST_Raw) &lt; MAE(RF_Flattened)</code>, we demonstrate that architectural sophistication (native patching/hierarchical stacking) supersedes manual data restructuring.</li>
-<li><strong>iTransformer:</strong> We explicitly include iTransformer to test if modeling multivariate correlations (e.g., Wind <span class="math inline">\(\to\)</span> Waves) offers advantages over the channel-independent approach of PatchTST.</li>
+<li><strong>Multivariate Analysis:</strong> <strong>iTransformer</strong> is explicitly included to test if modeling multivariate correlations (e.g., Wind <span class="math inline">\(\to\)</span> Waves) offers advantages over the channel-independent approach of PatchTST.</li>
 </ul>
 </section>
 <section id="phase-3-ablation-study---window-flatten" class="level3">
 <h3 class="anchored" data-anchor-id="phase-3-ablation-study---window-flatten">Phase 3: Ablation Study - Window &amp; Flatten</h3>
-<p><strong>Do Modern models improve if we ALSO give them WF?</strong></p>
-<p>To determine whether the Window &amp; Flatten technique or wavelets provides additional benefit to modern architectures, we conduct an ablation study where we train <strong>N-HiTS</strong>, <strong>PatchTST</strong>, and <strong>iTransformer</strong> using both raw sequential input and Window &amp; Flatten input.</p>
+<p><strong>Do modern models improve if we ALSO provide them with WF?</strong> We conduct an ablation study to determine if the Window &amp; Flatten technique or wavelets provide additional benefits to sophisticated architectures.</p>
 <ul>
-<li><strong>Models:</strong> <strong>N-HiTS</strong> and <strong>PatchTST</strong> (same as Phase 2).</li>
+<li><strong>Models:</strong> N-HiTS, PatchTST, and iTransformer.</li>
 <li><strong>Input Variants:</strong>
 <ul>
 <li><strong>Raw Sequential:</strong> Standard time-series window <span class="math inline">\((H_s, W_s, Dir, T_p)_{t-n...t}\)</span>.</li>
-<li><strong>Window &amp; Flatten:</strong> Same window size <span class="math inline">\(n=6\)</span> flattened into tabular vectors (matching Phase 1).</li>
-<li><strong>Wavelets:</strong> Apply different types of wavelets.</li>
+<li><strong>Window &amp; Flatten:</strong> Tabular vectors matching the Phase 1 configuration (<span class="math inline">\(n=6\)</span>).</li>
+<li><strong>Wavelets:</strong> Multi-resolution analysis applied to the input signal to evaluate frequency-domain feature extraction.</li>
 </ul></li>
-<li><strong>Hypothesis Test:</strong> If <code>MAE(Model_Raw) ≈ MAE(Model_WF)</code>, we confirm that modern architectures do not require manual windowing and can learn temporal patterns natively. If <code>MAE(Model_WF) &lt; MAE(Model_Raw)</code>, it suggests that even sophisticated architectures benefit from explicit temporal feature engineering. However, it will be worth quantifying how significant is this difference to really decide if it is worth doing this extra work and computation for the gains.</li>
+<li><strong>Hypothesis Test:</strong> If <code>MAE(Model_Raw) ≈ MAE(Model_WF)</code>, we confirm that modern architectures do not require manual windowing and learn temporal patterns natively.</li>
 </ul>
 </section>
 <section id="phase-4-focus-on-the-hard-variables-t_p-dir" class="level3">
 <h3 class="anchored" data-anchor-id="phase-4-focus-on-the-hard-variables-t_p-dir">Phase 4: Focus on the Hard Variables (<span class="math inline">\(T_p\)</span> &amp; <span class="math inline">\(Dir\)</span>)</h3>
-<p>We explore advanced techniques for complex oceanographic variables that the baseline RF failed to capture and explore if these techniques can further improve the performance and/or training times of the modern architectures:</p>
+<p>We explore advanced techniques for complex variables where traditional methods struggled:</p>
 <ul>
-<li><strong>Wave Direction (<span class="math inline">\(Dir\)</span>) with Von Mises Loss:</strong>
-<ul>
-<li>Standard regression (MSE) fails at the <span class="math inline">\(0^\circ/360^\circ\)</span> discontinuity. We implement a <strong>Von Mises Probabilistic Loss</strong> within N-HiTS, specifically designed for circular data distributions. This allows the model to “wrap around” North correctly, penalizing errors based on angular distance rather than Euclidean distance.</li>
-</ul></li>
-<li><strong>Interpretability of Period (<span class="math inline">\(T_p\)</span>):</strong>
-<ul>
-<li>To validate if the model “learns the physics,” we extract the <strong>“Seasonality Stack” output from N-HiTS</strong> and regress it against the observed Swell Period. A strong correlation here would prove that the model internally disentangles long-period swell components from noisy wind-sea data (Trend Stack).</li>
-</ul></li>
-<li><strong>Physical Consistency Constraint (Provisional, needs improvement):</strong>
-<ul>
-<li>We explore hard-coding a physical constraint into the loss function:</li>
-</ul></li>
+<li><strong>Wave Direction (<span class="math inline">\(Dir\)</span>) with Von Mises Loss:</strong> We implement a <strong>Von Mises Probabilistic Loss</strong> specifically designed for circular data. This allows the model to correctly handle the <span class="math inline">\(0^\circ/360^\circ\)</span> discontinuity by penalizing angular distance rather than Euclidean distance.</li>
+<li><strong>Interpretability of Period (<span class="math inline">\(T_p\)</span>):</strong> We extract the <strong>“Seasonality Stack”</strong> from N-HiTS and regress it against observed Swell Period to validate if the model internally disentangles long-period swell from noisy wind-sea data.</li>
+<li><strong>Physical Consistency Constraint:</strong> We explore a physics-inspired penalty in the loss function to reduce physically implausible predictions during extreme events:</li>
 </ul>
 <p><span class="math display">\[
 \mathcal{L}_{\text{total}} = \mathcal{L}_{\text{task}} + \lambda \cdot \text{ReLU}\left(\frac{H_s}{L} - \frac{1}{10}\right)
 \]</span></p>
-<p>We explore whether simple physics-inspired constraints can reduce physically implausible predictions, particularly during extreme events.</p>
 </section>
-<section id="phase-5-generalization-possible-application-as-part-of-this-project-or-maybe-a-later-project" class="level3">
-<h3 class="anchored" data-anchor-id="phase-5-generalization-possible-application-as-part-of-this-project-or-maybe-a-later-project">Phase 5: Generalization (possible application as part of this project or maybe a later project)</h3>
-<p>To prove that our findings are not specific to the local bathymetry of Valencia (a common criticism of ML wave studies), we extend the benchmark to <strong>three heterogeneous wave regimes</strong>:</p>
-<ol type="1">
-<li><strong>Valencia (Mediterranean):</strong></li>
-<li>other (hopefully other seas)</li>
-<li>other (hopefully other seas)</li>
-</ol>
-<p>All architectures use the same hyperparameters across regions; no site-specific tuning, window resizing, or loss-function modification is permitted during cross-region evaluation.</p>
-<p><strong>Goal:</strong> Demonstrate that <strong>N-HiTS</strong> and <strong>PatchTST</strong> generalize across these regimes <em>without</em> requiring site-specific feature engineering (e.g., re-tuning window sizes or physics equations for each port). We will also explore if they generalize without the need of training on a new sea.</p>
+<section id="phase-5-the-foundation-model-frontier-zero-shot-adaptation" class="level3">
+<h3 class="anchored" data-anchor-id="phase-5-the-foundation-model-frontier-zero-shot-adaptation">Phase 5: The Foundation Model Frontier (Zero-Shot &amp; Adaptation)</h3>
+<p>We evaluate if massive pre-trained models can disrupt the need for local, site-specific wave models by leveraging universal temporal patterns.</p>
+<ul>
+<li><strong>Models:</strong> <strong>Chronos-2</strong> (120M) and <strong>TimesFM-2.5</strong> (200M).</li>
+<li><strong>Experimental Modes:</strong>
+<ul>
+<li><strong>Zero-Shot:</strong> Direct inference on the Valencia dataset without seeing a single training sample.</li>
+<li><strong>In-Context Learning (ICL):</strong> Providing a long context window (up to 16k for TimesFM-2.5) to allow the model to adapt to local seasonality “on the fly” without weight updates.</li>
+<li><strong>Few-Shot Fine-Tuning:</strong> Specializing the foundation model weights on a small fraction (10-20%) of the Valencia training set to evaluate data efficiency.</li>
+</ul></li>
+<li><strong>Goal:</strong> Determine if “World Knowledge” of general physics can replace or augment sparse local oceanographic data.</li>
+</ul>
+</section>
+<section id="phase-6-state-space-efficiency-and-mixing" class="level3">
+<h3 class="anchored" data-anchor-id="phase-6-state-space-efficiency-and-mixing">Phase 6: State-Space Efficiency and Mixing</h3>
+<p>We move beyond Transformers to explore the next generation of architectures that handle multivariate correlations and long sequences more efficiently.</p>
+<ul>
+<li><strong>Models:</strong> <strong>Mamba</strong> (Selective SSM) and <strong>TSMixer</strong> (MLP-Mixer).</li>
+<li><strong>Benchmarking Metrics:</strong>
+<ul>
+<li><strong>Cross-Variate Correlation:</strong> Use <strong>TSMixer</strong> to evaluate if explicitly mixing variables (Wind <span class="math inline">\(\to\)</span> Waves) outperforms the channel-independent approach of PatchTST.</li>
+<li><strong>Scaling Laws:</strong> Compare GPU memory usage and inference speed of <strong>Mamba</strong> vs. <strong>PatchTST</strong> as the forecast horizon (<span class="math inline">\(h\)</span>) scales from 24h to 168h (7 days).</li>
+</ul></li>
+<li><strong>Interpretability:</strong> Extract the “Selective Scan” mechanism from Mamba to visualize which historical wave events the model “chooses” to remember vs. forget during high-energy transitions.</li>
+</ul>
+</section>
+<section id="phase-7-generalization-evaluation-protocol" class="level3">
+<h3 class="anchored" data-anchor-id="phase-7-generalization-evaluation-protocol">Phase 7: Generalization &amp; Evaluation Protocol</h3>
+<p>To prove the results are not site-specific, we extend the benchmark to <strong>three heterogeneous wave regimes</strong> (Valencia and two additional oceanic regions).</p>
+<ul>
+<li><strong>Decay Curve Analysis:</strong> Performance is reported at specific lead times (<span class="math inline">\(t+1, 6, 12, 24, 48\)</span> h) to visualize error growth over the forecast horizon.</li>
+<li><strong>Metric Suite:</strong> MAE, RMSE, and <span class="math inline">\(R^2\)</span> for all variables, using <strong>Circular MAE</strong> for wave direction.</li>
+<li><strong>Statistical Significance:</strong> Application of the <strong>Diebold-Mariano (DM) test</strong> to verify if the performance gains of challenger models over the baselines are statistically significant.</li>
+</ul>
 <hr>
 <p><em>Note: This project is currently in the active development and benchmarking phase. Results and detailed analysis will be updated as the experiments conclude.</em></p>
 
