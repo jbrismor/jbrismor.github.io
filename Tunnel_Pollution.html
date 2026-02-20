@@ -5131,7 +5131,7 @@ html { background-image: none !important; }
 </section>
 <section id="solution-overview" class="level2">
 <h2 class="anchored" data-anchor-id="solution-overview">Solution Overview</h2>
-<p>The system implements transformer-based architectures to predict future concentrations of multiple critical gases, including nitrogen dioxide (NO2), carbon monoxide (CO), carbon dioxide (CO2), nitric oxide (NO), and oxygen (O2). The solution handles the inherent challenges of real-world sensor data through sophisticated preprocessing, robust model architectures, and advanced training techniques.</p>
+<p>While the full details of the implementation will not be publicly available, here is a brief overview of the project: The system implements transformer-based architectures to predict future concentrations of multiple critical gases, including nitrogen dioxide (NO2), carbon monoxide (CO), carbon dioxide (CO2), nitric oxide (NO), and oxygen (O2). The solution handles the inherent challenges of real-world sensor data through sophisticated preprocessing, robust model architectures, and advanced training techniques.</p>
 <section id="data-quality-challenges" class="level3">
 <h3 class="anchored" data-anchor-id="data-quality-challenges">Data Quality Challenges</h3>
 <p>Real-world IoT sensor networks present significant data quality challenges that require specialized handling:</p>
@@ -5145,8 +5145,8 @@ html { background-image: none !important; }
 <section id="dual-architecture-approach" class="level3">
 <h3 class="anchored" data-anchor-id="dual-architecture-approach">Dual Architecture Approach</h3>
 <p>The system implements two complementary transformer architectures to address different aspects of the forecasting problem:</p>
-<p><strong>PatchTST (Patch Time Series Transformer)</strong>: Processes time series by segmenting them into semantic patches, similar to how language models process words. This approach preserves local patterns while maintaining computational efficiency and treating each gas sensor as an independent channel during initial processing.</p>
-<p><strong>iTransformer (Inverted Transformer)</strong>: Inverts the standard transformer logic by embedding entire time series as tokens and computing attention between different gas variables rather than time steps. This architecture explicitly models multivariate relationships, allowing the model to leverage correlations between gases (e.g., traffic emissions causing simultaneous peaks in NO2 and CO).</p>
+<p><strong>Type 1 model</strong>: Processes time series by segmenting them into semantic patches, similar to how language models process words. This approach preserves local patterns while maintaining computational efficiency and treating each gas sensor as an independent channel during initial processing.</p>
+<p><strong>Type 2 model</strong>: Inverts the standard transformer logic by embedding entire time series as tokens and computing attention between different gas variables rather than time steps. This architecture explicitly models multivariate relationships, allowing the model to leverage correlations between gases (e.g., traffic emissions causing simultaneous peaks in NO2 and CO).</p>
 </section>
 <section id="robust-data-preprocessing" class="level3">
 <h3 class="anchored" data-anchor-id="robust-data-preprocessing">Robust Data Preprocessing</h3>
@@ -5177,7 +5177,7 @@ html { background-image: none !important; }
 <section id="technical-implementation" class="level2">
 <h2 class="anchored" data-anchor-id="technical-implementation">Technical Implementation</h2>
 <p>The system was built using <strong>PyTorch</strong> as the core deep learning framework, with <strong>HuggingFace Transformers</strong> providing optimized transformer implementations. Hyperparameter optimization was orchestrated using <strong>Optuna</strong>, enabling automated search across complex parameter spaces. The entire training pipeline was executed on <strong>NVIDIA GeForce RTX 5090</strong> GPU, utilizing mixed-precision training (FP16) for efficiency.</p>
-<p>The project implements custom architectures for both PatchTST and iTransformer, incorporating specialized components for handling missing data, multi-scale normalization, and multivariate relationships. The codebase is structured to support both individual gas prediction and unified multi-gas forecasting, with comprehensive evaluation metrics (RMSE, MAE) calculated on denormalized data to provide meaningful physical units for safety-critical applications.</p>
+<p>The project implements custom architectures for both model types, incorporating specialized components for handling missing data, multi-scale normalization, and multivariate relationships. The codebase is structured to support both individual gas prediction and unified multi-gas forecasting, with comprehensive evaluation metrics (RMSE, MAE) calculated on denormalized data to provide meaningful physical units for safety-critical applications.</p>
 
 
 </section>

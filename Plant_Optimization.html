@@ -5096,9 +5096,7 @@ html { background-image: none !important; }
   <li><a href="#technical-implementation" id="toc-technical-implementation" class="nav-link" data-scroll-target="#technical-implementation">Technical Implementation</a></li>
   <li><a href="#solution-output" id="toc-solution-output" class="nav-link" data-scroll-target="#solution-output">Solution Output</a>
   <ul class="collapse">
-  <li><a href="#decision-variables" id="toc-decision-variables" class="nav-link" data-scroll-target="#decision-variables">Decision Variables</a></li>
   <li><a href="#solution-quality-metrics" id="toc-solution-quality-metrics" class="nav-link" data-scroll-target="#solution-quality-metrics">Solution Quality Metrics</a></li>
-  <li><a href="#visualizations-and-reports" id="toc-visualizations-and-reports" class="nav-link" data-scroll-target="#visualizations-and-reports">Visualizations and Reports</a></li>
   <li><a href="#export-and-integration" id="toc-export-and-integration" class="nav-link" data-scroll-target="#export-and-integration">Export and Integration</a></li>
   </ul></li>
   </ul>
@@ -5134,7 +5132,7 @@ html { background-image: none !important; }
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>This project presents a comprehensive optimization system for precast concrete dovela (tunnel and bridge segment) production plants. Dovelas are critical prefabricated components used in tunnel and bridge construction, requiring complex multi-stage manufacturing processes with interdependent workflows, resource constraints, and strict delivery deadlines. This system addresses the challenge of optimizing production planning by determining optimal resource allocation, production chain configurations, and scheduling decisions to minimize costs while meeting all operational constraints and delivery requirements.</p>
+<p>This project presents a comprehensive optimization system for precast concrete pieces production plants. Concrete pieces are critical prefabricated components used in construction, requiring complex multi-stage manufacturing processes with interdependent workflows, resource constraints, and strict delivery deadlines. This system addresses the challenge of optimizing production planning by determining optimal resource allocation, production chain configurations, and scheduling decisions to minimize costs while meeting all operational constraints and delivery requirements.</p>
 </section>
 <section id="video-demo" class="level2">
 <h2 class="anchored" data-anchor-id="video-demo">Video Demo</h2>
@@ -5142,20 +5140,14 @@ html { background-image: none !important; }
 </section>
 <section id="solution-overview" class="level2">
 <h2 class="anchored" data-anchor-id="solution-overview">Solution Overview</h2>
-<p>The system optimizes dovela production across two distinct plant types: <strong>tunnel dovela plants</strong> and <strong>bridge dovela plants</strong>. While both share the same core optimization framework and mathematical model, they differ in their specific production processes, worker requirements, and operational constraints. The system handles both variants through configurable plant logic, allowing the same optimization engine to adapt to different manufacturing contexts.</p>
+<p>The system optimizes concrete pieces production across different plant types. While they share the same core optimization framework and mathematical model, they differ in their specific production processes, worker requirements, and operational constraints. The system handles both variants through configurable plant logic, allowing the same optimization engine to adapt to different manufacturing contexts. While the details of the implementation will not be publicly available, here is a brief overview of the project:</p>
 <section id="production-chain-optimization" class="level3">
 <h3 class="anchored" data-anchor-id="production-chain-optimization">Production Chain Optimization</h3>
 <p>The system optimizes the complete production workflow, which includes:</p>
 <ul>
 <li><strong>Production chain configuration</strong>: Determining how many production chains of each type to operate simultaneously</li>
 <li><strong>Mold management</strong>: Calculating optimal mold quantities needed, accounting for reuse cycles and capacity constraints</li>
-<li><strong>Worker allocation</strong>: Optimizing multi-skilled worker assignments across different production stages, including:
-<ul>
-<li>Base worker requirements by type</li>
-<li>Night shift allocations</li>
-<li>Weekend shift planning</li>
-<li>Overtime scheduling</li>
-</ul></li>
+<li><strong>Worker allocation</strong>: Optimizing multi-skilled worker assignments across different production stages, shifts, and overtime.</li>
 <li><strong>Production flow scheduling</strong>: Coordinating material flow through sequential and parallel processes while respecting dependencies and wait times.</li>
 </ul>
 </section>
@@ -5165,17 +5157,7 @@ html { background-image: none !important; }
 </section>
 <section id="advanced-constraint-handling" class="level3">
 <h3 class="anchored" data-anchor-id="advanced-constraint-handling">Advanced Constraint Handling</h3>
-<p>The optimization model incorporates sophisticated operational constraints:</p>
-<ul>
-<li><strong>Sequential process logic</strong>: The system implements strict sequential flow constraints through cumulative precedence relationships. For each production stage, cumulative output cannot exceed cumulative input from upstream dependencies, ensuring materials flow correctly through the manufacturing pipeline. This is enforced via dependency graphs that define the production chain order (e.g., rebar creation → grid sealing → grid curving → rebar construction → mold preparation → filling line → finishing). The sequential logic prevents downstream processes from consuming materials that haven’t been produced yet, maintaining production feasibility throughout the planning horizon.</li>
-<li><strong>Process dependencies</strong>: Sequential and parallel process relationships with required wait times</li>
-<li><strong>Worker multi-skilling</strong>: Flexible worker assignments where skilled workers can perform multiple roles (e.g., machine operators can serve as crane operators)</li>
-<li><strong>Time period modeling</strong>: Calendar-aware scheduling with efficiency adjustments for night shifts, weekends, and overtime</li>
-<li><strong>Capacity limits</strong>: Production chain capacity constraints, mold availability, and worker availability bounds</li>
-<li><strong>WIP (Work-In-Progress) slots</strong>: Limits on the maximum number of units that a crew can process simultaneously at each production stage, based on physical workspace constraints and worker capacity. This prevents overloading workstations and ensures realistic production throughput</li>
-<li><strong>Buffer capacity</strong>: Intermediate inventory limits between production stages that prevent material accumulation. When a buffer reaches capacity, upstream processes must wait for downstream consumption, accurately modeling real-world storage constraints and preventing production bottlenecks</li>
-<li><strong>Delivery deadlines</strong>: Hard constraints ensuring dovela production meets project delivery requirements</li>
-</ul>
+<p>The optimization model incorporates sophisticated operational constraints such as sequential process logic, process dependencies, worker multi-skilling, time period modeling, capacity limits, WIP slots, buffer capacity, and delivery deadlines.</p>
 </section>
 <section id="cost-optimization" class="level3">
 <h3 class="anchored" data-anchor-id="cost-optimization">Cost Optimization</h3>
@@ -5183,47 +5165,35 @@ html { background-image: none !important; }
 <ul>
 <li>Production chain opening costs</li>
 <li>Mold acquisition and maintenance costs</li>
-<li>Worker wages (base, night shift premiums, weekend premiums, overtime)</li>
+<li>Worker wages (including all shifts and overtime)</li>
 <li>Resource utilization efficiency</li>
 </ul>
 </section>
 </section>
 <section id="technical-implementation" class="level2">
 <h2 class="anchored" data-anchor-id="technical-implementation">Technical Implementation</h2>
-<p>The optimization system is built using <strong>Mixed Integer Linear Programming (MILP)</strong> with the <strong>OR-Tools CP-SAT solver</strong> for high-performance constraint programming. The implementation includes:</p>
+<p>The optimization system is built using <strong>Mixed Integer Linear Programming (MILP)</strong> and it includes:</p>
 <ul>
-<li><strong>Advanced solver optimizations</strong>: Multi-threaded parallel solving, variable ordering strategies, and intelligent search heuristics achieving 2-10× performance improvements</li>
-<li><strong>Crash recovery system</strong>: Automatic checkpointing and warm-start capabilities for fault tolerance and solution continuity</li>
-<li><strong>Interactive web interface</strong>: <strong>Streamlit</strong>-based application providing:
-<ul>
-<li>Interactive configuration of production parameters</li>
-<li>Real-time optimization progress monitoring</li>
-<li>Visual results including Gantt charts, resource allocation tables, and cost breakdowns</li>
-<li>Support for both tunnel and bridge dovela plant configurations</li>
-</ul></li>
+<li>Multi-threaded parallel solving, variable ordering strategies, and intelligent search heuristics</li>
+<li>Automatic checkpointing and warm-start capabilities for fault tolerance and solution continuity</li>
+<li>An interactive web interface providing tables and visualizations of the production plan.</li>
 </ul>
-<p>The system has been validated on realistic production scenarios typically achieving 2-5% optimality gaps (metric used to measure the gap between the best solution found and the optimal solution).</p>
 </section>
 <section id="solution-output" class="level2">
 <h2 class="anchored" data-anchor-id="solution-output">Solution Output</h2>
-<p>The optimization system generates comprehensive production plans that provide actionable insights for plant managers:</p>
-<section id="decision-variables" class="level3">
-<h3 class="anchored" data-anchor-id="decision-variables">Decision Variables</h3>
-<p>The solution specifies optimal values for all key decision variables:</p>
+<p>The optimization system generates comprehensive production plans that provide actionable insights for plant managers such as:</p>
 <ul>
-<li><strong>Production chain configuration</strong>: Exact number of chains to open for each production stage, indicating which production lines should be activated</li>
-<li><strong>Mold requirements</strong>: Optimal quantity of each mold type needed, accounting for reuse cycles and production capacity</li>
-<li><strong>Worker allocation</strong>: Detailed worker assignments by type, including base staffing, night shifts, weekend shifts, and overtime schedules across all time periods</li>
-<li><strong>Worker task movement</strong>: The solution optimizes worker assignments across different production chains and tasks within each time period. Workers can be dynamically allocated to multiple production stages based on demand, leveraging multi-skilling capabilities to maximize resource utilization. The solution tracks which workers are assigned to which chains and roles in each period, enabling efficient cross-training utilization and minimizing idle time</li>
-<li><strong>Production flow schedule</strong>: Precise production quantities for each dovela type at each production stage and time period, creating a complete production timeline</li>
-<li><strong>Per-period worker schedules</strong>: Detailed breakdown of worker assignments for each time period, showing regular, night shift, weekend, and overtime workers by type</li>
-<li><strong>Weekly hiring commitments</strong>: Weekly worker requirement schedules showing staffing needs across Monday-Sunday periods, enabling proper workforce planning</li>
-<li><strong>Role reassignments</strong>: Tracking of when multi-skilled workers perform roles different from their primary role, demonstrating efficient utilization of cross-training</li>
-<li><strong>Idle capacity analysis</strong>: Identification of periods where workers are on-duty but not allocated to tasks, helping identify optimization opportunities</li>
-<li><strong>Chain switching patterns</strong>: Documentation of when workers are allocated across multiple production chains within the same period, showing flexible resource deployment</li>
-<li><strong>Completion tracking</strong>: Effective completion time and finish period identification, showing when production requirements are met</li>
+<li>Production chain configuration</li>
+<li>Mold requirements</li>
+<li>Worker allocation</li>
+<li>Production flow schedule</li>
+<li>Per-period worker schedules</li>
+<li>Weekly hiring commitments</li>
+<li>Role reassignments</li>
+<li>Idle capacity analysis</li>
+<li>Chain switching patterns</li>
+<li>Completion tracking</li>
 </ul>
-</section>
 <section id="solution-quality-metrics" class="level3">
 <h3 class="anchored" data-anchor-id="solution-quality-metrics">Solution Quality Metrics</h3>
 <p>The system provides transparency into solution quality:</p>
@@ -5235,33 +5205,13 @@ html { background-image: none !important; }
 <li><strong>Checkpoint recovery</strong>: Information about whether the solution was recovered from a saved checkpoint, ensuring continuity after interruptions</li>
 </ul>
 </section>
-<section id="visualizations-and-reports" class="level3">
-<h3 class="anchored" data-anchor-id="visualizations-and-reports">Visualizations and Reports</h3>
-<p>The interactive interface generates comprehensive visualizations:</p>
-<ul>
-<li><strong>Gantt charts</strong>: Timeline visualization showing production flow across all stages and time periods, chain activation patterns, and worker allocation over time</li>
-<li><strong>Resource allocation tables</strong>: Detailed breakdowns of worker assignments, chain utilization, and mold usage. These tables show how workers move between different production chains and tasks across time periods, highlighting multi-skilled worker utilization and cross-chain assignments</li>
-<li><strong>Worker schedule tables</strong>: Comprehensive tables showing per-period worker headcounts by type and shift, weekly hiring commitments, and day-by-day overtime details</li>
-<li><strong>Cost breakdowns</strong>: Itemized cost analysis showing contributions from workers (by shift type), molds, and chain openings</li>
-<li><strong>Production schedules</strong>: Period-by-period production quantities for each dovela type and production stage</li>
-<li><strong>Utilization reports</strong>: Tables showing role reassignments, chain switches, and idle capacity by period, providing insights into resource efficiency</li>
-</ul>
-</section>
 <section id="export-and-integration" class="level3">
 <h3 class="anchored" data-anchor-id="export-and-integration">Export and Integration</h3>
-<p>Solutions can be exported in multiple formats for integration with production management systems:</p>
+<p>Solutions can be exported in multiple formats for integration with production management systems</p>
 <ul>
-<li><strong>Excel export (multi-sheet)</strong>: Comprehensive Excel workbooks with separate sheets for:
-<ul>
-<li>Overall summary metrics and total costs</li>
-<li>Active chains per period</li>
-<li>Detailed production flow by chain</li>
-<li>Worker allocation and hours by type and period</li>
-<li>Mold usage and availability tracking</li>
-<li>Detailed cost breakdowns</li>
-</ul></li>
-<li><strong>JSON export</strong>: Complete solution data in structured format for programmatic integration</li>
-<li><strong>CSV exports</strong>: Individual tables exported as CSV files for easy import into other systems</li>
+<li>Excel export (multi-sheet)</li>
+<li>JSON export</li>
+<li>CSV exports</li>
 </ul>
 <p>These exports enable direct implementation of the optimized production plan in the manufacturing facility and integration with ERP, workforce management, and production planning systems.</p>
 
